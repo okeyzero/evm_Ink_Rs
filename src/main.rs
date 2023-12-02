@@ -166,7 +166,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     info!("任务执行完毕 程序将在 1000 秒后关闭");
     //编译成exe 取消下面的屏蔽 不让程序关闭窗口 不然的话 会执行完任务 直接关闭窗口 无法看输出的日志了
-    tokio::time::sleep(Duration::new(1000, 0)).await;
+    //tokio::time::sleep(Duration::new(1000, 0)).await;
     Ok(())
 }
 
