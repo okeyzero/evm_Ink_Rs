@@ -29,6 +29,8 @@ pub struct Config {
     pub to_address: Option<String>,
     pub max_fee_per_gas: f64,
     pub max_priority_fee_per_gas: Option<f64>,
+    #[serde(default = "default_prefix_gas_limit")]
+    pub gas_limit: u64,
     pub count: u64,
     pub data: String,
     #[serde(skip_deserializing)]
@@ -38,6 +40,9 @@ pub struct Config {
 }
 fn default_prefix() -> String {
     "data:,".to_string()
+}
+fn default_prefix_gas_limit() -> u64 {
+    50000
 }
 
 #[derive(Debug, Clone)]
@@ -52,7 +57,7 @@ pub struct Id {
 pub struct GasPrice {
     pub eip1559: bool,
     pub max_fee_per_gas: U256,
-    pub max_priority_fee_per_gas: U256,
+    pub max_priority_fee_per_gas: U256
 }
 
 impl Config {
@@ -103,7 +108,7 @@ impl Config {
         GasPrice {
             eip1559: self.max_priority_fee_per_gas.is_some(),
             max_fee_per_gas,
-            max_priority_fee_per_gas,
+            max_priority_fee_per_gas
         }
     }
 }
@@ -166,7 +171,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     info!("任务执行完毕 程序将在 1000 秒后关闭");
     //编译成exe 取消下面的屏蔽 不让程序关闭窗口 不然的话 会执行完任务 直接关闭窗口 无法看输出的日志了
-    //tokio::time::sleep(Duration::new(1000, 0)).await;
+    tokio::time::sleep(Duration::new(1000, 0)).await;
     Ok(())
 }
 
@@ -227,7 +232,7 @@ async fn mint(provider: &BatchRequestMiddleware<Provider<Http>>, wallet: &Wallet
                     .value(0)
                     .max_fee_per_gas(gas_price.max_fee_per_gas)
                     .max_priority_fee_per_gas(gas_price.max_priority_fee_per_gas)
-                    .gas(50000)
+                    .gas(config.gas_limit)
                     .nonce(nonce)
                     .data(data)
                     .access_list(vec![])
@@ -240,7 +245,7 @@ async fn mint(provider: &BatchRequestMiddleware<Provider<Http>>, wallet: &Wallet
                     .value(0)
                     .nonce(nonce)
                     .data(data)
-                    .gas(50000)
+                    .gas(config.gas_limit)
                     .gas_price(gas_price.max_fee_per_gas)
                     .into()
             };
