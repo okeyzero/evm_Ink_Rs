@@ -2,7 +2,7 @@ use anyhow::Result;
 use colored::Colorize;
 use fern::colors::{Color, ColoredLevelConfig};
 use indoc::indoc;
-use log::{LevelFilter};
+use log::LevelFilter;
 
 pub fn print_banner() {
     let banner = indoc! {
@@ -20,7 +20,7 @@ r#"
     log::info!("{}", format!("{}", banner.green().bold()));
 }
 
-pub fn log_banner(text:String) {
+pub fn log_banner(text: String) {
     let banner = indoc! {r#"========================================================================================================"#};
     log::info!("{}", format!("{}", banner.green().bold()));
     let text = format!("{:^width$}", text, width = banner.len());
